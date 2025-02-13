@@ -1,3 +1,5 @@
+Developer by: Rui Peleja & Rui Vieira
+
 wine_quality_ml/
 ├── data/
 │   ├── winequality-red.csv
