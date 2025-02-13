@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request
 import joblib
 import numpy as np
+import os
 
 app = Flask(__name__)
 
 # Load model and transformers
-model = joblib.load('models/wine_quality_model.pkl')
-scaler = joblib.load('models/scaler.pkl')
-imputer = joblib.load('models/imputer.pkl')
+model = joblib.load('WorkML/models/wine_quality_model.pkl')
+scaler = joblib.load('WorkML/models/scaler.pkl')
+imputer = joblib.load('WorkML/models/imputer.pkl')
 
 @app.route('/')
 def index():
@@ -16,19 +17,29 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Receber os dados do formulário
-        features = [float(request.form[f'feature{i}']) for i in range(1, 11)]
-        
-        # Converter para array numpy e pré-processar
+        # Extract features from the form (match expected model input)
+        feature_names = [
+            'fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
+            'chlorides', 'free sulfur dioxide', 'density', 'pH', 'sulphates',
+            'alcohol', 'type', 'precipitation', 'relativehumidity',
+            'solarradiation', 'temperature', 'uvindexmax', 'winddirection',
+            'windspeed', 'year', 'month'
+        ]
+
+        # Convert form data to float and create feature array
+        features = [float(request.form[name]) for name in feature_names]
+
+        # Convert to NumPy array and preprocess
         new_data = np.array([features])
         new_data = imputer.transform(new_data)
         new_data = scaler.transform(new_data)
-        
-        # Fazer previsão
+
+        # Make prediction
         prediction = model.predict(new_data)[0]
-        result = "Bom" if prediction == 1 else "Regular"
-        
+        result = "Bom Vinho" if prediction == 1 else "Vinho Regular"
+
         return render_template('result.html', result=result)
+
     except Exception as e:
         return f'Erro ao processar a previsão: {e}'
 

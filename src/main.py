@@ -27,6 +27,8 @@ def main():
     df = data_loader.merge_data(wine_df, weather_df)
     df = preprocessor.preprocess(df)
     
+    print(df.columns)
+    
     # Prepare features and split data
     X, y = preprocessor.prepare_features(df)
     X_train, X_test, y_train, y_test = trainer.split_data(X, y)
