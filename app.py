@@ -6,9 +6,9 @@ import os
 app = Flask(__name__)
 
 # Load model and transformers
-model = joblib.load('WorkML/models/wine_quality_model.pkl')
-scaler = joblib.load('WorkML/models/scaler.pkl')
-imputer = joblib.load('WorkML/models/imputer.pkl')
+model = joblib.load('models/wine_quality_model.pkl')
+scaler = joblib.load('models/scaler.pkl')
+imputer = joblib.load('models/imputer.pkl')
 
 @app.route('/')
 def index():
@@ -19,8 +19,8 @@ def predict():
     try:
         # Extract features from the form (match expected model input)
         feature_names = [
-            'fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
-            'chlorides', 'free sulfur dioxide', 'density', 'pH', 'sulphates',
+            'fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar',
+            'chlorides', 'free_sulfur_dioxide', 'density', 'pH', 'sulphates',
             'alcohol', 'type', 'precipitation', 'relativehumidity',
             'solarradiation', 'temperature', 'uvindexmax', 'winddirection',
             'windspeed', 'year', 'month'
