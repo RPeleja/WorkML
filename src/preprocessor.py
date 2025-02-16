@@ -50,7 +50,7 @@ class DataPreprocessor:
         df = df.drop(columns=columns_to_drop)
 
         # Create target variable
-        df['best_quality'] = [1 if x > 7 else 0 for x in df.quality]
+        df['best_quality'] = [1 if x > 6 else 0 for x in df.quality]
         #df['best_quality'] = [2 if x >= 7 else 1 if x > 5 and x < 7 else 0 for x in df.quality]
 
         return df
