@@ -28,7 +28,7 @@
         X_train_scaled, X_test_scaled = preprocessor.fit_transform(X_train, X_test)
 """
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from xgboost import XGBClassifier
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
@@ -64,3 +64,40 @@ class ModelTrainer:
             model.fit(X_train, y_train)
             trained_models[name] = model
         return trained_models
+    
+    def tune_model_RF(self, X_train, y_train):
+        
+        # Define hyperparameters to tune
+        param_grid = {
+            'n_estimators': [50, 100, 200],  # Number of trees
+            'max_depth': [10, 20, None],  # Tree depth
+            'min_samples_split': [2, 5, 10],  # Minimum samples to split
+            'min_samples_leaf': [1, 2, 4],  # Minimum samples per leaf
+            'max_features': ['sqrt', 'log2'],  # Features per split
+            'bootstrap': [True, False]  # Sampling method
+        }
+
+        # Initialize Random Forest
+        rf = RandomForestClassifier(random_state=42)
+
+        # Run Grid Search
+        grid_search = GridSearchCV(rf, param_grid, cv=5, scoring='roc_auc', n_jobs=-1, verbose=2)
+        grid_search.fit(X_train, y_train)
+
+        # Best parameters & score
+        print("Best Params:", grid_search.best_params_)
+        print("Best AUC Score:", grid_search.best_score_)
+        
+        best_rf = RandomForestClassifier(
+            n_estimators=grid_search.best_params_['n_estimators'],
+            max_depth=grid_search.best_params_['max_depth'],
+            min_samples_split=grid_search.best_params_['min_samples_split'],
+            min_samples_leaf=grid_search.best_params_['min_samples_leaf'],
+            max_features=grid_search.best_params_['max_features'],
+            bootstrap=grid_search.best_params_['bootstrap'],
+            random_state=42
+        )
+
+        best_rf.fit(X_train, y_train)
+        #print("Optimized Model AUC:", roc_auc_score(ytest, best_rf.predict_proba(xtest)[:, 1]))
+        return best_rf

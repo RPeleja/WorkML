@@ -49,9 +49,12 @@ def main():
 
     # Plot results
     evaluator.plot_results(results, X_test, y_test, trained_models[best_model], X)
+    
+    # Hyperparameter tuning for RandomForest because it's the best model
+    best_model_hyperTuned = trainer.tune_model_RF(X_train, y_train)
 
     # Choose the best model and save it
-    joblib.dump(best_model, f"{config.MODEL_PATH}wine_quality_model.pkl")
+    joblib.dump(best_model_hyperTuned, f"{config.MODEL_PATH}wine_quality_model.pkl")
     joblib.dump(preprocessor.scaler, f"{config.MODEL_PATH}scaler.pkl")
     joblib.dump(preprocessor.imputer, f"{config.MODEL_PATH}imputer.pkl")
 
