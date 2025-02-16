@@ -42,11 +42,11 @@ class ModelTrainer:
             'xgboost': XGBClassifier(),
             'svm': SVC(kernel='rbf', probability=True),
             'random_forest': RandomForestClassifier(
-                n_estimators=100, 
+                n_estimators=config.N_ESTIMATORS, 
                 random_state=config.RANDOM_STATE
             ),
             'gradient_boosting': GradientBoostingClassifier(
-                n_estimators=100, 
+                n_estimators=config.N_ESTIMATORS, 
                 random_state=config.RANDOM_STATE
             )
         }

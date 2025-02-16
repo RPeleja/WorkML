@@ -2,6 +2,7 @@
     Central configuration management for the wine quality prediction project.
     
     Attributes:
+        N_ESTIMATORS (int): Number of estimators for ensemble models (100)
         RANDOM_STATE (int): Seed for reproducibility (42)
         TEST_SIZE (float): Proportion of data used for testing (0.2)
         WEATHER_MONTHS (list): Months when wine data is collected [9, 10]
@@ -10,8 +11,9 @@
 """
 class Config:
     
+    N_ESTIMATORS = 100
     RANDOM_STATE = 42
     TEST_SIZE = 0.2
-    WEATHER_MONTHS = [9, 10]  # September and October
+    WEATHER_MONTHS = [8, 10]  # August to October
     MODEL_PATH = 'WorkML/models/'
     DATA_PATH = 'WorkML/data/'

@@ -41,7 +41,7 @@ class DataPreprocessor:
         columns_to_drop = [
             'entity_id', 'entity_type', 'name', 'latitude', 'longitude',
             'date_observed', 'time_observed', 'barometricpressure', 
-            'uv_index', 'total sulfur dioxide', 'timestamp'
+            'uv_index', 'total_sulfur_dioxide', 'timestamp'
         ]
 
         # Extract time features
@@ -51,13 +51,15 @@ class DataPreprocessor:
         df = df.drop(columns=columns_to_drop)
 
         # Create target variable
-        df['best quality'] = [1 if x > 5 else 0 for x in df.quality]
+        df['best_quality'] = [1 if x > 5 else 0 for x in df.quality]
+        
+        #df['best quality'] = [2 if x >= 7 else 1 if x > 5 and x < 7 else 0 for x in df.quality]
         
         return df
 
     def prepare_features(self, df):
-        features = df.drop(['quality', 'best quality'], axis=1)
-        target = df['best quality']
+        features = df.drop(['quality', 'best_quality'], axis=1)
+        target = df['best_quality']
         return features, target
 
     def fit_transform(self, X_train, X_test):

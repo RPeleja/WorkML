@@ -19,8 +19,8 @@ def predict():
     try:
         # Extract features from the form (match expected model input)
         feature_names = [
-            'fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
-            'chlorides', 'free sulfur dioxide', 'density', 'pH', 'sulphates',
+            'fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar',
+            'chlorides', 'free_sulfur_dioxide', 'density', 'pH', 'sulphates',
             'alcohol', 'type', 'precipitation', 'relativehumidity',
             'solarradiation', 'temperature', 'uvindexmax', 'winddirection',
             'windspeed', 'year', 'month'
@@ -38,7 +38,7 @@ def predict():
         prediction = model.predict(new_data)[0]
         result = "Bom Vinho" if prediction == 1 else "Vinho Regular"
 
-        return render_template('result.html', result=result)
+        return render_template('result.html', result=result, prediction=prediction)
 
     except Exception as e:
         return f'Erro ao processar a previsão: {e}'
