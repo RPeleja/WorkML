@@ -29,26 +29,32 @@
 """
 
 from sklearn.model_selection import train_test_split, GridSearchCV
-from xgboost import XGBClassifier
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from xgboost import XGBClassifier, XGBRegressor
+from sklearn.svm import SVC, SVR
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestClassifier, GradientBoostingClassifier, RandomForestRegressor
 
 class ModelTrainer:
     def __init__(self, config):
         self.config = config
         self.models = {
-            'logistic': LogisticRegression(),
-            'xgboost': XGBClassifier(),
-            'svm': SVC(kernel='rbf', probability=True),
-            'random_forest': RandomForestClassifier(
-                n_estimators=config.N_ESTIMATORS, 
-                random_state=config.RANDOM_STATE
-            ),
-            'gradient_boosting': GradientBoostingClassifier(
-                n_estimators=config.N_ESTIMATORS, 
-                random_state=config.RANDOM_STATE
-            )
+            # 'logistic': LogisticRegression(),
+            # 'xgboost': XGBClassifier(),
+            # 'svm': SVC(kernel='rbf', probability=True),
+            # 'random_forest': RandomForestClassifier(
+            #     n_estimators=config.N_ESTIMATORS, 
+            #     random_state=config.RANDOM_STATE
+            # ),
+            # 'gradient_boosting': GradientBoostingClassifier(
+            #     n_estimators=config.N_ESTIMATORS, 
+            #     random_state=config.RANDOM_STATE
+            # )
+            
+            'linear_regression': LinearRegression(),
+            'random_forest': RandomForestRegressor(n_estimators=config.N_ESTIMATORS, random_state=config.RANDOM_STATE),
+            'gradient_boosting': GradientBoostingRegressor(n_estimators=config.N_ESTIMATORS, random_state=config.RANDOM_STATE),
+            'xgboost': XGBRegressor(n_estimators=config.N_ESTIMATORS, random_state=config.RANDOM_STATE),
+            'svm': SVR()
         }
 
     def split_data(self, X, y):

@@ -56,7 +56,7 @@ class DataPreprocessor:
 
     def prepare_features(self, df):
         features = df.drop(['quality', 'best_quality'], axis=1)
-        target = df['best_quality']
+        target = df['quality']
         return features, target
 
     def fit_transform(self, X_train, X_test):

@@ -27,8 +27,8 @@ import numpy as np
 import pandas as pd
 from sklearn.calibration import calibration_curve
 from sklearn.metrics import (
-    confusion_matrix, classification_report, roc_curve,
-    roc_auc_score, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
+    confusion_matrix, classification_report, mean_absolute_error, mean_squared_error, roc_curve,
+    roc_auc_score, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score, r2_score
 )
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -37,36 +37,31 @@ class ModelEvaluator:
     def evaluate_models(self, models, X_test, y_test):
         results = {}
         best_model = None
-        best_auc = 0  # Track best AUC Score
+        best_r2 = -np.inf # Best model was the best R2 score
 
         for name, model in models.items():
             y_pred = model.predict(X_test)
 
-            # Check if model supports predict_proba
-            if hasattr(model, "predict_proba"):
-                y_prob = model.predict_proba(X_test)[:, 1]  # Get probabilities
-                auc = roc_auc_score(y_test, y_prob)  # Compute AUC
-            else:
-                y_prob = None  # No probabilities available
-                auc = roc_auc_score(y_test, y_pred)  # Use predictions instead
+            # Calculate performance metrics
+            mae = mean_absolute_error(y_test, y_pred)
+            mse = mean_squared_error(y_test, y_pred)
+            rmse = np.sqrt(mse)
+            r2 = r2_score(y_test, y_pred)
             
             results[name] = {
-                'accuracy': accuracy_score(y_test, y_pred),
-                'precision': precision_score(y_test, y_pred),
-                'recall': recall_score(y_test, y_pred),
-                'f1_score': f1_score(y_test, y_pred),
-                'roc_auc': auc,  # Store AUC
-                'y_prob': y_prob,  # Store probabilities (if available)
-                'confusion_matrix': confusion_matrix(y_test, y_pred),
-                'classification_report': classification_report(y_test, y_pred, output_dict=True)
+                'MAE': mae,
+                'MSE': mse,
+                'RMSE': rmse,
+                'R2': r2,
+                'y_pred': y_pred 
             }
 
             # Update best model if AUC is higher
-            if auc > best_auc:
-                best_auc = auc
+            if r2 > best_r2:
+                best_r2 = r2
                 best_model = name
 
-        print(f"\n📌 **Best Model:** {best_model} with AUC Score: {best_auc:.4f}")
+        print(f"\n📌 **Best Model:** {best_model} with R2 Score: {best_r2:.4f}")
         return results, best_model
 
     def plot_results(self, results, X_test, y_test, best_model_Used, features):
@@ -89,42 +84,24 @@ class ModelEvaluator:
             plt.gca().invert_yaxis()  # Invert y-axis to show top features first
             plt.show()
 
-        # Confusion Matrices
         for name, result in results.items():
-            cm = result['confusion_matrix']
-            disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-            disp.plot(cmap='Blues')
-            plt.title(f'Confusion Matrix: {name}')
-            plt.show()
-        
-        # ROC Curves
-        for name, result in results.items():
-            if result['y_prob'] is not None:  # Only plot ROC if y_prob exists
-                fpr, tpr, _ = roc_curve(y_test, result['y_prob'])
-                plt.plot(fpr, tpr, label=f'{name} (AUC = {result["roc_auc"]:.2f})')
+            y_pred = result['y_pred']
+            errors = y_test - y_pred  # Calculate errors
 
-        plt.plot([0, 1], [0, 1], 'k--')
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        plt.title('ROC Curves')
-        plt.legend()
-        plt.show()
-        
-        # Identify False Positives and False Negatives
-        predictions = best_model_Used.predict(X_test)
-        false_positives = (predictions == 1) & (y_test == 0)
-        false_negatives = (predictions == 0) & (y_test == 1)
+            plt.figure(figsize=(12, 5))
+            # Histogram of Errors
+            plt.subplot(1, 2, 1)
+            sns.histplot(errors, bins=20, kde=True, color='blue')
+            plt.axvline(0, color='red', linestyle='dashed')
+            plt.title(f'Histogram of Errors - {name}')
+            plt.xlabel('Error (y_real - y_pred)')
+            plt.ylabel('Frequency')
 
-        print(f'False Positives: {np.sum(false_positives)}')
-        print(f'False Negatives: {np.sum(false_negatives)}')
-    
-        # Plot calibration curve
-        if hasattr(best_model_Used, 'predict_proba'):
-            prob_true, prob_pred = calibration_curve(y_test, best_model_Used.predict_proba(X_test)[:, 1], n_bins=10)
-            plt.plot(prob_pred, prob_true, marker='o', label='Calibration Curve')
-            plt.plot([0, 1], [0, 1], linestyle='--', label='Perfect Calibration')
-            plt.xlabel('Predicted Probability')
-            plt.ylabel('True Probability')
-            plt.title('Calibration Curve')
-            plt.legend()
+            # Scatter Plot (y_test vs y_pred)
+            plt.subplot(1, 2, 2)
+            sns.scatterplot(x=y_test, y=y_pred, alpha=0.5)
+            plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--')
+            plt.title(f'Prediction vs Actual - {name}')
+            plt.xlabel('Actual Value (y_test)')
+            plt.ylabel('Predicted Value (y_pred)')
             plt.show()
