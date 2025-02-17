@@ -21,9 +21,8 @@ def predict():
         feature_names = [
             'fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar',
             'chlorides', 'free_sulfur_dioxide', 'density', 'pH', 'sulphates',
-            'alcohol', 'type', 'precipitation', 'relativehumidity',
-            'solarradiation', 'temperature', 'uvindexmax', 'winddirection',
-            'windspeed', 'year', 'month'
+            'alcohol', 'type', 'precipitation', 'relativehumidity', 'temperature', 'winddirection',
+            'windspeed', 'month'
         ]
 
         # Convert form data to float and create feature array
