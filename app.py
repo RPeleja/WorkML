@@ -6,9 +6,9 @@ import os
 app = Flask(__name__)
 
 # Load model and transformers
-model = joblib.load('models/wine_quality_model.pkl')
-scaler = joblib.load('models/scaler.pkl')
-imputer = joblib.load('models/imputer.pkl')
+model = joblib.load('WorkML/models/wine_quality_model.pkl')
+scaler = joblib.load('WorkML/models/scaler.pkl')
+imputer = joblib.load('WorkML/models/imputer.pkl')
 
 @app.route('/')
 def index():
@@ -21,7 +21,8 @@ def predict():
         feature_names = [
             'fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar',
             'chlorides', 'free_sulfur_dioxide', 'density', 'pH', 'sulphates',
-            'alcohol', 'type', 'precipitation', 'relativehumidity', 'temperature', 'winddirection',
+            'alcohol', 'type', 'precipitation', 'relativehumidity',
+            'temperature', 'winddirection',
             'windspeed', 'month'
         ]
 
@@ -37,7 +38,7 @@ def predict():
         prediction = model.predict(new_data)[0]
         result = "Bom Vinho" if prediction == 1 else "Vinho Regular"
 
-        return render_template('result.html', result=result)
+        return render_template('result.html', result=result, prediction=prediction)
 
     except Exception as e:
         return f'Erro ao processar a previsão: {e}'

@@ -28,8 +28,6 @@ from datetime import datetime
 class DataLoader:
     def __init__(self, config):
         self.config = config
-        
-        
 
     def load_wine_data(self, red_wine_path, white_wine_path):
         df_red = pd.read_csv(red_wine_path)

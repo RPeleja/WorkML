@@ -19,9 +19,14 @@ def main():
         f"{config.DATA_PATH}winequality-red.csv",
         f"{config.DATA_PATH}winequality-white.csv"
     )
+    
     weather_df = data_loader.load_weather_data(
         f"{config.DATA_PATH}weather-porto-2024.csv"
     )
+    
+    # Fix column names for both datasets
+    wine_df.columns = wine_df.columns.str.replace(' ', '_')
+    weather_df.columns = weather_df.columns.str.replace(' ', '_')
     
     # Merge and preprocess data
     df = data_loader.merge_data(wine_df, weather_df)
@@ -39,13 +44,17 @@ def main():
     # Train models
     trained_models = trainer.train_models(X_train, y_train)
     
-    # Evaluate models
-    results = evaluator.evaluate_models(trained_models, X_test, y_test)
-    evaluator.plot_results(results, y_test)
+    # Evaluate models and find the best one
+    results, best_model = evaluator.evaluate_models(trained_models, X_test, y_test)
+
+    # Plot results
+    evaluator.plot_results(results, X_test, y_test, trained_models[best_model], X)
     
-    # Save best model
-    best_model = trained_models['xgboost']  # or select based on results
-    joblib.dump(best_model, f"{config.MODEL_PATH}wine_quality_model.pkl")
+    # Hyperparameter tuning for RandomForest because it's the best model
+    best_model_hyperTuned = trainer.tune_model_RF(X_train, y_train)
+
+    # Choose the best model and save it
+    joblib.dump(best_model_hyperTuned, f"{config.MODEL_PATH}wine_quality_model.pkl")
     joblib.dump(preprocessor.scaler, f"{config.MODEL_PATH}scaler.pkl")
     joblib.dump(preprocessor.imputer, f"{config.MODEL_PATH}imputer.pkl")
 
