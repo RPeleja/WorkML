@@ -6,9 +6,9 @@ import os
 app = Flask(__name__)
 
 # Load model and transformers
-model = joblib.load('WorkML/models/wine_quality_model.pkl')
-scaler = joblib.load('WorkML/models/scaler.pkl')
-imputer = joblib.load('WorkML/models/imputer.pkl')
+model = joblib.load('models/wine_quality_model.pkl')
+scaler = joblib.load('models/scaler.pkl')
+imputer = joblib.load('models/imputer.pkl')
 
 @app.route('/')
 def index():
