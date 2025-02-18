@@ -15,5 +15,5 @@ class Config:
     RANDOM_STATE = 42
     TEST_SIZE = 0.2
     WEATHER_MONTHS = [8, 10]  # August to October
-    MODEL_PATH = 'models/'
-    DATA_PATH = 'data/'
+    MODEL_PATH = 'WorkML/models/'
+    DATA_PATH = 'WorkML/data/'

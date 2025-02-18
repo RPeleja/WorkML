@@ -44,20 +44,26 @@ class DataPreprocessor:
             'uv_index', 'total_sulfur_dioxide', 'timestamp', 'uvindexmax', 'solarradiation'
         ]
 
-        # Extract time features
-        df['month'] = df['timestamp'].dt.month
-
         df = df.drop(columns=columns_to_drop)
-
+        
+        # Set Null values to mean
+        df['windspeed'] = df['windspeed'].fillna(df['windspeed'].mean())
+        
+        print(df.isnull().sum())
+        
         # Create target variable
-        df['best_quality'] = [1 if x > 6 else 0 for x in df.quality]
-        #df['best_quality'] = [2 if x >= 7 else 1 if x > 5 and x < 7 else 0 for x in df.quality]
+        df['best_quality'] = [1 if x >= 6 else 0 for x in df.quality]
+        #df['best_quality'] = [0 if x < 5 else 1 if 5 <= x < 7 else 2 for x in df['quality']]
 
         return df
 
     def prepare_features(self, df):
+        
+        # Normalize quality insurance that the minimum value is 0
+        # min_quality = df['quality'].min()
+        # df['quality'] = df['quality'] - min_quality
+        target = df['best_quality']     
         features = df.drop(['quality', 'best_quality'], axis=1)
-        target = df['best_quality']
         return features, target
 
     def fit_transform(self, X_train, X_test):
@@ -66,5 +72,4 @@ class DataPreprocessor:
         
         X_train = self.scaler.fit_transform(X_train)
         X_test = self.scaler.transform(X_test)
-        
         return X_train, X_test

@@ -58,11 +58,13 @@ class ModelTrainer:
             random_state=self.config.RANDOM_STATE
         )
 
-    def train_models(self, X_train, y_train):
+    def train_models(self, X_train, y_train, X_test, y_test):
         trained_models = {}
         for name, model in self.models.items():
             model.fit(X_train, y_train)
+            score = model.score(X_test,y_test)
             trained_models[name] = model
+            print(f"{name} trained. Test Score: {score:.4f}")
         return trained_models
     
     def tune_model_RF(self, X_train, y_train):

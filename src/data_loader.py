@@ -54,9 +54,13 @@ class DataLoader:
             size=len(wine_df)
         )
         
-        return pd.merge_asof(
+        df = pd.merge_asof(
             wine_df.sort_values('timestamp'),
-            weather_df.sort_values('timestamp'),
+            weather_filtered.sort_values('timestamp'),
             on='timestamp',
             direction='nearest'
         )
+        
+        # Convert to Numerical columns
+        #df = df.apply(pd.to_numeric, errors='coerce')          
+        return df

@@ -42,7 +42,7 @@ def main():
     X_train, X_test = preprocessor.fit_transform(X_train, X_test)
     
     # Train models
-    trained_models = trainer.train_models(X_train, y_train)
+    trained_models = trainer.train_models(X_train, y_train, X_test, y_test)
     
     # Evaluate models and find the best one
     results, best_model = evaluator.evaluate_models(trained_models, X_test, y_test)
