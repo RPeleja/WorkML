@@ -28,28 +28,16 @@
         X_train_scaled, X_test_scaled = preprocessor.fit_transform(X_train, X_test)
 """
 
-from sklearn.model_selection import train_test_split, GridSearchCV
-from xgboost import XGBClassifier, XGBRegressor
-from sklearn.svm import SVC, SVR
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestClassifier, GradientBoostingClassifier, RandomForestRegressor
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
+from xgboost import XGBRegressor
+from sklearn.svm import SVR
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 
 class ModelTrainer:
     def __init__(self, config):
         self.config = config
         self.models = {
-            # 'logistic': LogisticRegression(),
-            # 'xgboost': XGBClassifier(),
-            # 'svm': SVC(kernel='rbf', probability=True),
-            # 'random_forest': RandomForestClassifier(
-            #     n_estimators=config.N_ESTIMATORS, 
-            #     random_state=config.RANDOM_STATE
-            # ),
-            # 'gradient_boosting': GradientBoostingClassifier(
-            #     n_estimators=config.N_ESTIMATORS, 
-            #     random_state=config.RANDOM_STATE
-            # )
-            
             'linear_regression': LinearRegression(),
             'random_forest': RandomForestRegressor(n_estimators=config.N_ESTIMATORS, random_state=config.RANDOM_STATE),
             'gradient_boosting': GradientBoostingRegressor(n_estimators=config.N_ESTIMATORS, random_state=config.RANDOM_STATE),
@@ -64,37 +52,34 @@ class ModelTrainer:
             random_state=self.config.RANDOM_STATE
         )
 
-    def train_models(self, X_train, y_train):
+    def train_models(self, X_train, y_train, X_test, y_test):
         trained_models = {}
         for name, model in self.models.items():
             model.fit(X_train, y_train)
+            score = model.score(X_test,y_test)  # R² Score
             trained_models[name] = model
+            print(f"{name} trained. Test R² Score: {score:.4f}")
         return trained_models
     
     def tune_model_RF(self, X_train, y_train):
         
-        # Define hyperparameters to tune
-        param_grid = {
-            'n_estimators': [50, 100, 200],  # Number of trees
-            'max_depth': [10, 20, None],  # Tree depth
-            'min_samples_split': [2, 5, 10],  # Minimum samples to split
-            'min_samples_leaf': [1, 2, 4],  # Minimum samples per leaf
-            'max_features': ['sqrt', 'log2'],  # Features per split
-            'bootstrap': [True, False]  # Sampling method
-        }
+        # Initialize Random Forest Regressor
+        rf = RandomForestRegressor(random_state=42)
 
-        # Initialize Random Forest
-        rf = RandomForestClassifier(random_state=42)
-
-        # Run Grid Search
-        grid_search = GridSearchCV(rf, param_grid, cv=5, scoring='roc_auc', n_jobs=-1, verbose=2)
+        # Use RandomizedSearchCV for efficiency
+        grid_search = RandomizedSearchCV(
+            rf, self.config.param_grid, cv=5, scoring='neg_mean_absolute_error', 
+            n_iter=10, n_jobs=-1, verbose=2, random_state=42
+        )
+        
         grid_search.fit(X_train, y_train)
 
         # Best parameters & score
         print("Best Params:", grid_search.best_params_)
-        print("Best AUC Score:", grid_search.best_score_)
-        
-        best_rf = RandomForestClassifier(
+        print("Best Score:", grid_search.best_score_)
+
+        # Train best model
+        best_rf = RandomForestRegressor(
             n_estimators=grid_search.best_params_['n_estimators'],
             max_depth=grid_search.best_params_['max_depth'],
             min_samples_split=grid_search.best_params_['min_samples_split'],
@@ -105,5 +90,4 @@ class ModelTrainer:
         )
 
         best_rf.fit(X_train, y_train)
-        #print("Optimized Model AUC:", roc_auc_score(ytest, best_rf.predict_proba(xtest)[:, 1]))
         return best_rf

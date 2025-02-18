@@ -39,10 +39,13 @@ def main():
     X_train, X_test, y_train, y_test = trainer.split_data(X, y)
     
     # Scale and impute data
-    X_train, X_test = preprocessor.fit_transform(X_train, X_test)
+    X_train = preprocessor.fit(X_train)
+    X_test = preprocessor.transform(X_test)
+    
+    evaluator.before_trainning_plot(df)
     
     # Train models
-    trained_models = trainer.train_models(X_train, y_train)
+    trained_models = trainer.train_models(X_train, y_train, X_test, y_test)
     
     # Evaluate models and find the best one
     results, best_model = evaluator.evaluate_models(trained_models, X_test, y_test)

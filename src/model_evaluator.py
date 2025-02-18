@@ -64,6 +64,12 @@ class ModelEvaluator:
         print(f"\n📌 **Best Model:** {best_model} with R2 Score: {best_r2:.4f}")
         return results, best_model
 
+    def before_trainning_plot(self, merged_df):
+        plt.figure(figsize=(10, 6))
+        sns.heatmap(merged_df.corr(), cmap='coolwarm', annot=True, fmt=".2f")
+        plt.title("Feature Correlation Matrix")
+        plt.show()
+
     def plot_results(self, results, X_test, y_test, best_model_Used, features):
         
         # feature importance

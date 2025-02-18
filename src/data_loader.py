@@ -45,7 +45,7 @@ class DataLoader:
         weather_filtered = weather_df[
             (weather_df['timestamp'].dt.month.isin(self.config.WEATHER_MONTHS))
         ]
-        
+
         # Generate random dates for wine data
         min_date = weather_filtered['timestamp'].min()
         max_date = weather_filtered['timestamp'].max()
@@ -53,10 +53,40 @@ class DataLoader:
             pd.date_range(min_date, max_date), 
             size=len(wine_df)
         )
-        
-        return pd.merge_asof(
+
+        merged_df = pd.merge_asof(
             wine_df.sort_values('timestamp'),
             weather_df.sort_values('timestamp'),
             on='timestamp',
             direction='nearest'
         )
+        
+        # Extracting features from timestamp
+        merged_df['hour'] = merged_df['timestamp'].dt.hour
+        merged_df['day'] = merged_df['timestamp'].dt.day
+        merged_df['month'] = merged_df['timestamp'].dt.month
+        merged_df['weekday'] = merged_df['timestamp'].dt.weekday
+        
+        # Create a feature for time of day (morning, afternoon, night)
+        merged_df['time_of_day'] = merged_df['hour'].apply(lambda x: 'morning' if 6 <= x < 12 
+                                                                    else 'afternoon' if 12 <= x < 18 
+                                                                    else 'night')
+
+        # Create seasonal feature based on month
+        merged_df['season'] = merged_df['month'].apply(lambda x: 'winter' if x in [12, 1, 2] 
+                                                                else 'spring' if x in [3, 4, 5] 
+                                                                else 'summer' if x in [6, 7, 8] 
+                                                                else 'autumn')
+
+        # Convert categorical features into numerical (one-hot encoding)
+        merged_df = pd.get_dummies(merged_df, columns=['time_of_day', 'season'], drop_first=True)
+
+        # One-Hot Encode categorical columns (e.g., entity_id, name)
+        merged_df = pd.get_dummies(merged_df, columns=['entity_id', 'name'], drop_first=True)
+        
+        # Apply Log Transformation to Skewed Features
+        skewed_features = ["residual_sugar", "free_sulfur_dioxide", "total_sulfur_dioxide"]
+        for feature in skewed_features:
+            merged_df[feature] = np.log1p(merged_df[feature])
+        
+        return merged_df
