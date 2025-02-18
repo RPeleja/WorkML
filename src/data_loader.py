@@ -28,6 +28,11 @@ from datetime import datetime
 class DataLoader:
     def __init__(self, config):
         self.config = config
+        # Set pandas display options to show the full width of the rows
+        pd.set_option('display.max_columns', None)  # Show all columns
+        pd.set_option('display.width', None)  # Adjust width to avoid truncation
+        pd.set_option('display.max_rows', None)  # Show all rows if you need
+        pd.set_option('display.max_colwidth', None)  # Show full content of each column
 
     def load_wine_data(self, red_wine_path, white_wine_path):
         df_red = pd.read_csv(red_wine_path)
@@ -59,8 +64,5 @@ class DataLoader:
             weather_filtered.sort_values('timestamp'),
             on='timestamp',
             direction='nearest'
-        )
-        
-        # Convert to Numerical columns
-        #df = df.apply(pd.to_numeric, errors='coerce')          
+        )       
         return df

@@ -4,6 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Previsão da Qualidade do Vinho</title>
+    <script>
+        function setNewDefaults() {
+            document.querySelector('input[name="fixed_acidity"]').value = "7.4";
+            document.querySelector('input[name="volatile_acidity"]').value = "0.63";
+            document.querySelector('input[name="citric_acid"]').value = "0.1";
+            document.querySelector('input[name="residual_sugar"]').value = "2.4";
+            document.querySelector('input[name="chlorides"]').value = "0.08";
+            document.querySelector('input[name="free_sulfur_dioxide"]').value = "16.0";
+            document.querySelector('input[name="density"]').value = "0.9";
+            document.querySelector('input[name="pH"]').value = "3.58";
+            document.querySelector('input[name="sulphates"]').value = "0.69";
+            document.querySelector('input[name="alcohol"]').value = "10.8";
+            document.querySelector('select[name="type"]').value = "0"; // Tinto
+            document.querySelector('input[name="precipitation"]').value = "0.0";
+            document.querySelector('input[name="relativehumidity"]').value = "0.9";
+            document.querySelector('input[name="temperature"]').value = "7.7";
+            document.querySelector('input[name="winddirection"]').value = "101.0";
+            document.querySelector('input[name="windspeed"]').value = "0.4";
+        }
+
+        function setNewDefaults2() {
+            document.querySelector('input[name="fixed_acidity"]').value = "6.9";
+            document.querySelector('input[name="volatile_acidity"]').value = "0.4";
+            document.querySelector('input[name="citric_acid"]').value = "0.56";
+            document.querySelector('input[name="residual_sugar"]').value = "11.2";
+            document.querySelector('input[name="chlorides"]').value = "0.04";
+            document.querySelector('input[name="free_sulfur_dioxide"]').value = "40.0";
+            document.querySelector('input[name="density"]').value = "0.9";
+            document.querySelector('input[name="pH"]').value = "3.14";
+            document.querySelector('input[name="sulphates"]').value = "0.46";
+            document.querySelector('input[name="alcohol"]').value = "8.7";
+            document.querySelector('select[name="type"]').value = "1"; // Branco
+            document.querySelector('input[name="precipitation"]').value = "0.0";
+            document.querySelector('input[name="relativehumidity"]').value = "0.9";
+            document.querySelector('input[name="temperature"]').value = "7.7";
+            document.querySelector('input[name="winddirection"]').value = "101.0";
+            document.querySelector('input[name="windspeed"]').value = "0.4";
+        }
+        
+    </script>
 </head>
 <body>
     <h2>Previsão da Qualidade do Vinho</h2>
@@ -59,9 +99,11 @@
         <label for="windspeed">Velocidade do Vento:</label>
         <input type="number" step="0.1" name="windspeed" value="12.0" required><br>
     
-        <label for="month">Mês:</label>
-        <input type="number" min="1" max="12" name="month" value="9" required><br>
         <button type="submit">Prever Qualidade</button>
+        <br><br>
+        <button type="button" onclick="setNewDefaults()">Altera valores para Excelente Vinho</button><br><br>
+        <button type="button" onclick="setNewDefaults2()">Altera valores para Vinho Regular</button><br><br>
+        
     </form>
         
 </body>

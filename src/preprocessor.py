@@ -52,16 +52,26 @@ class DataPreprocessor:
         print(df.isnull().sum())
         
         # Create target variable
-        df['best_quality'] = [1 if x >= 6 else 0 for x in df.quality]
-        #df['best_quality'] = [0 if x < 5 else 1 if 5 <= x < 7 else 2 for x in df['quality']]
 
+        def func(x):
+            if x < 6:
+                return 0
+            elif 6 <= x < 7:
+                return 1
+            else:
+                return 2
+
+        df['best_quality'] = df['quality'].apply(func)
+        
+        # Get all rows where 'best_quality' is 2
+        records_with_best_quality_2 = df[df['best_quality'] == 0]
+
+        # Display the filtered rows
+        print(records_with_best_quality_2.head(1))
+        
         return df
 
     def prepare_features(self, df):
-        
-        # Normalize quality insurance that the minimum value is 0
-        # min_quality = df['quality'].min()
-        # df['quality'] = df['quality'] - min_quality
         target = df['best_quality']     
         features = df.drop(['quality', 'best_quality'], axis=1)
         return features, target

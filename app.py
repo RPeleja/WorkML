@@ -23,7 +23,7 @@ def predict():
             'chlorides', 'free_sulfur_dioxide', 'density', 'pH', 'sulphates',
             'alcohol', 'type', 'precipitation', 'relativehumidity',
             'temperature', 'winddirection',
-            'windspeed', 'month'
+            'windspeed'
         ]
 
         # Convert form data to float and create feature array
@@ -36,7 +36,7 @@ def predict():
 
         # Make prediction
         prediction = model.predict(new_data)[0]
-        result = "Bom Vinho" if prediction == 1 else "Vinho Regular"
+        result = "Excelente Vinho" if prediction == 2 else "Bom Vinho" if prediction == 1 else "Vinho Regular"
 
         return render_template('result.html', result=result, prediction=prediction)
 

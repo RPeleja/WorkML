@@ -69,27 +69,18 @@ class ModelTrainer:
     
     def tune_model_RF(self, X_train, y_train):
         
-        # Define hyperparameters to tune
-        param_grid = {
-            'n_estimators': [50, 100, 200],  # Number of trees
-            'max_depth': [10, 20, None],  # Tree depth
-            'min_samples_split': [2, 5, 10],  # Minimum samples to split
-            'min_samples_leaf': [1, 2, 4],  # Minimum samples per leaf
-            'max_features': ['sqrt', 'log2'],  # Features per split
-            'bootstrap': [True, False]  # Sampling method
-        }
-
         # Initialize Random Forest
-        rf = RandomForestClassifier(random_state=42)
+        rf = RandomForestClassifier(random_state=self.config.RANDOM_STATE)
 
         # Run Grid Search
-        grid_search = GridSearchCV(rf, param_grid, cv=5, scoring='roc_auc', n_jobs=-1, verbose=2)
+        grid_search = GridSearchCV(rf, self.config.param_grid_RF, cv=5, scoring='roc_auc_ovr', n_jobs=-1, verbose=2)
         grid_search.fit(X_train, y_train)
 
         # Best parameters & score
         print("Best Params:", grid_search.best_params_)
         print("Best AUC Score:", grid_search.best_score_)
         
+        # Train the best model
         best_rf = RandomForestClassifier(
             n_estimators=grid_search.best_params_['n_estimators'],
             max_depth=grid_search.best_params_['max_depth'],
@@ -97,9 +88,33 @@ class ModelTrainer:
             min_samples_leaf=grid_search.best_params_['min_samples_leaf'],
             max_features=grid_search.best_params_['max_features'],
             bootstrap=grid_search.best_params_['bootstrap'],
-            random_state=42
+            random_state=self.config.RANDOM_STATE
         )
 
         best_rf.fit(X_train, y_train)
-        #print("Optimized Model AUC:", roc_auc_score(ytest, best_rf.predict_proba(xtest)[:, 1]))
+        
         return best_rf
+    
+    def tune_model_XGB(self, X_train, y_train):
+        # Initialize XGBoost classifier
+        xgb = XGBClassifier(
+            objective='multi:softprob', 
+            num_class=3, 
+            eval_metric='mlogloss', 
+            use_label_encoder=False, 
+            random_state=self.config.RANDOM_STATE
+        )
+
+        # Run Grid Search with AUC scoring for multiclass (OvR)
+        grid_search = GridSearchCV(xgb, self.config.param_grid_XB, cv=5, scoring='roc_auc_ovr', n_jobs=-1, verbose=2)
+        grid_search.fit(X_train, y_train)
+
+        # Best parameters & score
+        print("Best Params:", grid_search.best_params_)
+        print("Best AUC Score:", grid_search.best_score_)
+
+        # Train the best model
+        best_xgb = XGBClassifier(**grid_search.best_params_, objective='multi:softprob', num_class=3, eval_metric='mlogloss', random_state=self.config.RANDOM_STATE)
+        best_xgb.fit(X_train, y_train)
+
+        return best_xgb

@@ -48,11 +48,16 @@ def main():
     results, best_model = evaluator.evaluate_models(trained_models, X_test, y_test)
 
     # Plot results
-    evaluator.plot_results(results, X_test, y_test, trained_models[best_model], X)
+    evaluator.plot_results(results, X_test, y_test, trained_models[best_model], X, best_model)
     
-    # Hyperparameter tuning for RandomForest because it's the best model
-    best_model_hyperTuned = trainer.tune_model_RF(X_train, y_train)
-
+    # Hyperparameter tuning for RandomForest OR XGBoost because it's the best model
+    if best_model == 'random_forest':
+        best_model_hyperTuned = trainer.tune_model_RF(X_train, y_train)
+    elif best_model == 'xgboost':
+        best_model_hyperTuned = trainer.tune_model_XGB(X_train, y_train)
+    else:
+        best_model_hyperTuned = trained_models[best_model]
+        
     # Choose the best model and save it
     joblib.dump(best_model_hyperTuned, f"{config.MODEL_PATH}wine_quality_model.pkl")
     joblib.dump(preprocessor.scaler, f"{config.MODEL_PATH}scaler.pkl")
