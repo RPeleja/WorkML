@@ -5,6 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultado da Previsão</title>
 </head>
+<style>
+    body {
+        font-family: 'Georgia', serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    h2 {
+        text-align: center;
+        color: #5a2d0c;
+        font-size: 2.5em;
+        margin-top: 20px;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin: 15px 0 5px;
+        font-weight: bold;
+        color: #5a2d0c;
+    }
+
+    input[type="number"], select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+
+    button {
+        display: inline-block;
+        width: 100%;
+        padding: 10px;
+        background-color: #8b4513;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.2em;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background-color: #a0522d;
+    }
+
+    button[type="button"] {
+        background-color: #5a2d0c;
+        margin-top: 5px;
+    }
+
+    button[type="button"]:hover {
+        background-color: #7a4a2c;
+    }
+
+    .max-w-xl {
+        max-width: 36rem;
+    }
+
+    .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .p-4 {
+        padding: 1rem;
+    }
+</style>
 <body>
     <h2>Resultado da Previsão</h2>
     <p>O vinho foi classificado como: <strong>{{ result }}</strong></p>

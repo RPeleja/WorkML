@@ -4,6 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Previsão da Qualidade do Vinho</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        h2 {
+            text-align: center;
+            color: #5a2d0c;
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            color: #5a2d0c;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px 0px 10px 0px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        button {
+            display: inline-block;
+            width: 100%;
+            padding: 10px;
+            background-color: #8b4513;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #a0522d;
+        }
+
+        button[type="button"] {
+            background-color: #5a2d0c;
+            margin-top: 5px;
+        }
+
+        button[type="button"]:hover {
+            background-color: #7a4a2c;
+        }
+
+        .max-w-xl {
+            max-width: 36rem;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .p-4 {
+            padding: 1rem;
+        }
+    </style>
     <script>
         function setNewDefaults() {
             document.querySelector('input[name="fixed_acidity"]').value = "7.4";
@@ -15,7 +96,7 @@
             document.querySelector('input[name="density"]').value = "0.9";
             document.querySelector('input[name="pH"]').value = "3.58";
             document.querySelector('input[name="sulphates"]').value = "0.69";
-            document.querySelector('input[name="alcohol"]').value = "10.8";
+            document.querySelector('input[name="alcohol"]').value = "13.5";
             document.querySelector('select[name="type"]').value = "0"; // Tinto
             document.querySelector('input[name="precipitation"]').value = "0.0";
             document.querySelector('input[name="relativehumidity"]').value = "0.9";
