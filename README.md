@@ -1,6 +1,6 @@
 Developer by: Rui Peleja & Rui Vieira
 
-wine_quality_ml/
+WORKML/
 ├── data/
 │   ├── winequality-red.csv
 │   ├── winequality-white.csv
@@ -16,6 +16,11 @@ wine_quality_ml/
 │   ├── model_trainer.py
 │   ├── model_evaluator.py
 │   └── main.py
+├── Templates/
+│   ├── index.html
+│   └── result.html
+├── app.py
+├── requirements.txt
 └── README.md
 
 
