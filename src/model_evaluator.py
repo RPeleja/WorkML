@@ -69,6 +69,10 @@ class ModelEvaluator:
         print(f"\n📌 **Best Model:** {best_model} with accuracy Score: {best_auc:.4f}")
         return results, best_model
 
+    def plot_hist_show(self, df):
+        df.hist(bins=20, figsize=(10, 10))
+        plt.show()
+
     def plot_results(self, results, X_test, y_test, best_model_Used, features, best_model):
         
         # Convert the classification report dictionary into a DataFrame

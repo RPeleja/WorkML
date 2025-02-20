@@ -33,6 +33,7 @@ def main():
     df = preprocessor.preprocess(df)
     
     print(df.columns)
+    evaluator.plot_hist_show(df)
     
     # Prepare features and split data
     X, y = preprocessor.prepare_features(df)
