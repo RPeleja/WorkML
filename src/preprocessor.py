@@ -49,7 +49,7 @@ class DataPreprocessor:
         # Set Null values to mean
         df['windspeed'] = df['windspeed'].fillna(df['windspeed'].mean())
         
-        print(df.isnull().sum())
+        print("Null values\n" + df.isnull().sum().to_string())
         
         # Create target variable
 
@@ -62,12 +62,6 @@ class DataPreprocessor:
                 return 2
 
         df['best_quality'] = df['quality'].apply(func)
-        
-        # Get all rows where 'best_quality' is 2
-        records_with_best_quality_2 = df[df['best_quality'] == 0]
-
-        # Display the filtered rows
-        print(records_with_best_quality_2.head(1))
         
         return df
 
