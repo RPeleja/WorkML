@@ -27,6 +27,13 @@ WORKML/
 
 Running the Project
 
+Load the docker Image on Another Machine 'wine_ml_project.tar'
+using:
+> docker load -i wine_ml_project.tar
+> docker run -d -p 5000:5000 wine_ml_project
+
+OR 
+
 1.Install required packages:
 >pip install -r requirements.txt
 

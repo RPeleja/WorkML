@@ -109,34 +109,28 @@ class ModelEvaluator:
             plt.show()
         
         # # ROC Curves
-        # # Convert y_test into binary labels
-        # y_test_bin = label_binarize(y_test, classes=[0, 1, 2])  # Converts (n_samples,) → (n_samples, n_classes)
+        # Convert y_test into binary labels
+        y_test_bin = label_binarize(y_test, classes=[0, 1, 2])  # Converts (n_samples,) → (n_samples, n_classes)
 
-        # plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(8, 6))
 
-        # # Loop through each class (0, 1, 2)
-        # for i, class_label in enumerate([0, 1, 2]):
-        #     y_prob_class = results[best_model]['y_prob'][:, i]  # Probabilities for class i
-        #     fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_prob_class)  # Compute ROC curve
-        #     roc_auc = auc(fpr, tpr)  # Compute AUC
+        for name, result in results.items():
+            # Loop through each class (0, 1, 2)
+            for i, class_label in enumerate([0, 1, 2]):
+                y_prob_class = result['y_prob'][:, i]  # Probabilities for class i
+                fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_prob_class)  # Compute ROC curve
+                roc_auc = auc(fpr, tpr)  # Compute AUC
 
-        #     plt.plot(fpr, tpr, label=f'Class {class_label} (AUC = {roc_auc:.2f})')
+                plt.plot(fpr, tpr, label=f'{name} class {class_label} (AUC = {roc_auc:.2f})')
 
-        # # Plot baseline (random chance)
-        # plt.plot([0, 1], [0, 1], 'k--', label="Random (AUC = 0.50)")
-        # plt.xlabel('False Positive Rate')
-        # plt.ylabel('True Positive Rate')
-        # plt.title('Multiclass ROC Curve')
-        # plt.legend()
-        # plt.show()
+        # Plot baseline (random chance)
+        plt.plot([0, 1], [0, 1], 'k--')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Multiclass ROC Curve')
+        plt.legend()
+        plt.show()
 
-        # plt.plot([0, 1], [0, 1], 'k--')
-        # plt.xlabel('False Positive Rate')
-        # plt.ylabel('True Positive Rate')
-        # plt.title('ROC Curves')
-        # plt.legend()
-        # plt.show()
-        
         # Identify False Positives and False Negatives
         predictions = result['predictions']
         false_positives = (predictions == 1) & (y_test == 0)
