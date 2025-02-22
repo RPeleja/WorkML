@@ -2,3 +2,13 @@
 .\models\imputer.pkl
 .\models\scaler.pkl
 .\models\wine_quality_model.pkl
+.\src\__pycache__\config.cpython-312.pyc
+.\src\__pycache__\config.cpython-313.pyc
+.\src\__pycache__\data_loader.cpython-312.pyc
+.\src\__pycache__\data_loader.cpython-313.pyc
+.\src\__pycache__\model_evaluator.cpython-312.pyc
+.\src\__pycache__\model_evaluator.cpython-313.pyc
+.\src\__pycache__\model_trainer.cpython-312.pyc
+.\src\__pycache__\model_trainer.cpython-313.pyc
+.\src\__pycache__\preprocessor.cpython-312.pyc
+.\src\__pycache__\preprocessor.cpython-313.pyc
