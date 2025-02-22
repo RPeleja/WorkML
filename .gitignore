@@ -1,0 +1,4 @@
+# .gitignore
+.\models\imputer.pkl
+.\models\scaler.pkl
+.\models\wine_quality_model.pkl
